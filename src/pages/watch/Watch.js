@@ -8,7 +8,14 @@ export default function Watch() {
                 <ArrowBackOutlined />
                 Home
             </div>
-            <video className="video" autoPlay progress controls src="https://netlify-movie-app-99.netlify.app/dd148d27-c538-42cb-8135-217a99fbe39b" />
+            <video
+                className="video"
+                autoPlay
+                progress
+                controls
+                src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0fd273d2c6d9a064f3ae35579b2bbdf&profile_id=139&oauth2_token_id=57447761
+"
+            />
         </div>
     );
 }
