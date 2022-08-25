@@ -13,6 +13,7 @@ const Home = ({ type }) => {
     useEffect(() => {
         const getRamdomLists = async () => {
             try {
+                console.log(type, genre);
                 const res = await axios.get(`http://localhost:9999/api/lists${type ? '?type=' + type : ''}${genre ? '&genre=' + genre : ''}`, {
                     headers: {
                         token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMDQ2MWU2ODAzNTM3NDU3YmYxNDU0YiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2MTQ0MTY0NSwiZXhwIjoxNjYxODczNjQ1fQ.GmkgJLCqlqmrAWK_7uhiXtyMBwG_F5xC5MdB56NdWTo',
