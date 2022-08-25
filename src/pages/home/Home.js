@@ -6,13 +6,11 @@ import NavBar from '../../componets/NavBar/NavBar';
 import Featured from '../../componets/featured/Featured';
 import List from '../../componets/list/List';
 
-const Home = () => {
+const Home = ({ type }) => {
     return (
         <div className="home">
             <NavBar />
-            <Featured
-            // type="movie"
-            />
+            <Featured type={type} />
             <List />
             <List />
             <List />
