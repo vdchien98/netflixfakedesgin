@@ -1,13 +1,34 @@
 import { InfoOutlined, PlayArrow } from '@material-ui/icons';
-import React from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './Featured.scss';
-function Featured({ type }) {
+
+export default function Featured({ type, setGenre }) {
+    const [content, setContent] = useState({});
+
+    useEffect(() => {
+        const getRandomContent = async () => {
+            try {
+                const res = await axios.get(`http://localhost:9999/api/movies/random?type=${type}`, {
+                    headers: {
+                        token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMDQ2MWU2ODAzNTM3NDU3YmYxNDU0YiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2MTQ0MTY0NSwiZXhwIjoxNjYxODczNjQ1fQ.GmkgJLCqlqmrAWK_7uhiXtyMBwG_F5xC5MdB56NdWTo',
+                    },
+                });
+                setContent(res.data[0]);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getRandomContent();
+    }, [type]);
+
+    console.log(content);
     return (
         <div className="featured">
             {type && (
                 <div className="category">
                     <span>{type === 'movies' ? 'Movies' : 'Series'}</span>
-                    <select name="genre" id="genre">
+                    <select name="genre" id="genre" onChange={(e) => setGenre(e.target.value)}>
                         <option>Genre</option>
                         <option value="adventure">Adventure</option>
                         <option value="comedy">Comedy</option>
@@ -25,15 +46,10 @@ function Featured({ type }) {
                     </select>
                 </div>
             )}
-            <img src="https://kenh14cdn.com/thumb_w/660/203336854389633024/2022/7/7/ngang-16571829094711198711641.jpg" />
-            <div className="infor">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Avengers_Endgame_Logo_Black.svg/2560px-Avengers_Endgame_Logo_Black.svg.png" />
-                <span className="desc">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                    in culpa qui officia deserunt mollit anim id est laborum.
-                </span>
+            <img src={content.img} alt="" />
+            <div className="info">
+                <img src={content.imgTitle} alt="" />
+                <span className="desc">{content.desc}</span>
                 <div className="buttons">
                     <button className="play">
                         <PlayArrow />
@@ -48,5 +64,3 @@ function Featured({ type }) {
         </div>
     );
 }
-
-export default Featured;
