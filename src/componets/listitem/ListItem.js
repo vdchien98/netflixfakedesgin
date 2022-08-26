@@ -1,40 +1,58 @@
-import { PlayArrow, Add, ThumbUpOutlined, ThumbDownOutlined } from '@material-ui/icons';
+import { PlayArrow, Add, ThumbUpAltOutlined, ThumbDownOutlined } from '@material-ui/icons';
 import './ListItem.scss';
-import { useState } from 'react';
-export default function ListItem({ index }) {
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+export default function ListItem({ index, item }) {
     const [isHovered, setIsHovered] = useState(false);
-    const trailer =
-        'https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0fd273d2c6d9a064f3ae35579b2bbdf&profile_id=139&oauth2_token_id=57447761';
+    const [movie, setMovie] = useState({});
+
+    useEffect(() => {
+        const getMovie = async () => {
+            try {
+                const res = await axios.get('http://localhost:9999/api/movies/find/' + item, {
+                    headers: {
+                        token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMDQ2MWU2ODAzNTM3NDU3YmYxNDU0YiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2MTQ0MTY0NSwiZXhwIjoxNjYxODczNjQ1fQ.GmkgJLCqlqmrAWK_7uhiXtyMBwG_F5xC5MdB56NdWTo',
+                    },
+                });
+                setMovie(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getMovie();
+    }, [item]);
     return (
-        <div
-            className="listItem"
-            style={{ left: isHovered && index * 225 - 50 + index * 2.5 }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            <img src="https://static1.dienanh.net/upload/202205/db021250-c7f6-44fc-8177-46ba301dcfea.jpg" />
-            {isHovered && (
-                <>
-                    <video src={trailer} autoPlay={true} loop />
-                    <div className="itemInfo">
-                        <div className="icons">
-                            <PlayArrow className="icon" />
-                            <Add className="icon" />
-                            <ThumbUpOutlined className="icon" />
-                            <ThumbDownOutlined className="icon" />
+        <Link to={{ pathname: '/watch', movie: movie }}>
+            <div
+                className="listItem"
+                style={{ left: isHovered && index * 225 - 50 + index * 2.5 }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <img src={movie?.imgSm} alt="" />
+                {isHovered && (
+                    <>
+                        <video src={movie.trailer} autoPlay={true} loop />
+                        <div className="itemInfo">
+                            <div className="icons">
+                                <PlayArrow className="icon" />
+                                <Add className="icon" />
+
+                                <ThumbUpAltOutlined className="icon" />
+                                <ThumbDownOutlined className="icon" />
+                            </div>
+                            <div className="itemInfoTop">
+                                <span>{movie.duration}</span>
+                                <span className="limit">+{movie.limit}</span>
+                                <span>{movie.year}</span>
+                            </div>
+                            <div className="desc">{movie.desc}</div>
+                            <div className="genre">{movie.genre}</div>
                         </div>
-                        <div className="itemInfoTop">
-                            <span>2 hour 9 mins 4 seconds</span>
-                            <span className="limit">+16</span>
-                            <span>1998</span>
-                        </div>
-                        <div className="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                        </div>
-                        <div className="genre">Actions</div>
-                    </div>
-                </>
-            )}
-        </div>
+                    </>
+                )}
+            </div>
+        </Link>
     );
 }
